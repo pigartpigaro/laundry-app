@@ -14,7 +14,7 @@
         </q-header>
         <q-page-container id="printMe">
           <div class="q-pa-sm">
-            <data-cetak />
+            <data-cetak :imgKey="imgKey" />
           </div>
         </q-page-container>
         <q-footer elevated>
@@ -36,6 +36,13 @@ import DataCetak from "./DataCetak.vue";
 import { ref } from "vue";
 
 const store = useFormOrderTransaksiStore();
+
+const imgKey = ref(0);
+
+// Fungsi untuk memperbarui imgKey
+function forceReloadImage() {
+  imgKey.value += 1;
+}
 const printed = ref(false);
 const printObj = {
   id: "printMe",
@@ -50,6 +57,7 @@ const printObj = {
   },
   closeCallback(vue) {
     printed.value = false;
+    forceReloadImage();
     console.log("closePrint");
   },
 };

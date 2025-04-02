@@ -8,8 +8,9 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-const SERV = "http://localhost:8000";
-// const SERV = "http://laundry-backend.test";
+// const SERV = "http://localhost:8185";
+const SERV = "http://laundry-backend.test";
+// const SERV = "http://127.0.0.1:8000";
 // const SERV = process.env.API_URL || "http://laundry-backend.test";
 const base = SERV;
 const api = axios.create({ baseURL: base + "/api" });

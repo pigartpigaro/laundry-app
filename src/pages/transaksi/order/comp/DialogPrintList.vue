@@ -18,7 +18,11 @@
               class="col justify-center content-center items-center full-width"
             >
               <div class="justify-center text-center q-py-sm">
-                <q-img src="~assets/logonami.svg" style="width: 250px" />
+                <q-img
+                  src="~assets/logonami.svg"
+                  style="width: 250px"
+                  :key="imgKey"
+                />
               </div>
 
               <div class="justify-center text-center text-weight-bold">
@@ -35,6 +39,10 @@
               </div>
               <div class="justify-center text-center q-pt-md text-weight-bold">
                 No Nota : {{ store.dataCetak?.no_nota }}
+              </div>
+              <div class="justify-center text-center" style="font-size: 13px">
+                Tanggal : {{ store.dataCetak?.tanggal }}
+                {{ store.dataCetak?.time }}
               </div>
             </div>
             <div class="row content-center q-pt-sm">
@@ -127,6 +135,8 @@ import { useOrderTransaksiStore } from "src/stores/order/list";
 
 import { ref } from "vue";
 
+const imgKey = ref(0);
+
 const store = useOrderTransaksiStore();
 const printed = ref(false);
 const printObj = {
@@ -142,6 +152,7 @@ const printObj = {
   },
   closeCallback(vue) {
     printed.value = false;
+    imgKey.value += 1;
     console.log("closePrint");
   },
 };

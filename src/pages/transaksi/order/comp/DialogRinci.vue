@@ -109,6 +109,20 @@ const localRinci = ref({
   keterangan: null,
 });
 
+const resetForm = () => {
+  localRinci.value = {
+    no_nota: null,
+    kodeproduk: null,
+    produk: null,
+    satuan: null,
+    kategori: null,
+    kuantitas: null,
+    harga: null,
+    subtotal: null,
+    keterangan: null,
+  };
+  store.activeRinciIndex = null;
+};
 // Watch perubahan pada index rincian yang aktif
 watch(
   () => store.activeRinciIndex,
@@ -118,73 +132,72 @@ watch(
       localRinci.value = { ...store.form.rincians[index] };
     } else {
       // Jika mode tambah, reset localRinci
-      localRinci.value = {
-        no_nota: null,
-        kodeproduk: null,
-        produk: null,
-        satuan: null,
-        kategori: null,
-        kuantitas: null,
-        harga: null,
-        subtotal: null,
-        keterangan: null,
-      };
+      resetForm();
     }
   },
   { immediate: true }
 );
 
 function isiproduk(val) {
-  const kode = selectProduk?.items.find((x) => x?.produk === val);
-  localRinci.value.kodeproduk = kode?.kodeproduk;
-  localRinci.value.harga = kode?.harga;
-  localRinci.value.satuan = kode?.satuan;
-  localRinci.value.kategori = kode?.kategori;
+  const produk = selectProduk.items.find((x) => x.produk === val);
+  if (produk) {
+    localRinci.value = {
+      ...localRinci.value,
+      kodeproduk: produk.kodeproduk,
+      harga: produk.harga,
+      satuan: produk.satuan,
+      kategori: produk.kategori,
+      // subtotal: produk.harga * (localRinci.value.kuantitas || 1),
+    };
+  }
 }
 
 const closeDialog = () => {
   store.dialogrincis = false;
   store.activeRinciIndex = null; // Reset index setelah tutup dialog
-  localRinci.value = {
-    produk: null,
-    satuan: null,
-    kuantitas: null,
-    harga: null,
-    subtotal: null,
-    keterangan: null,
-  };
+  resetForm();
 };
 
-function onSubmit() {
+async function onSubmit() {
   // Validasi
   if (
     !localRinci.value.produk ||
     !localRinci.value.kuantitas ||
-    !localRinci.value.harga ||
-    !localRinci.value.subtotal
+    !localRinci.value.harga
   ) {
-    alert("Harap Lengkapi Semua Field Rincian!");
+    notifError("Harap lengkapi semua field rincian!");
     return;
   }
 
-  // Update atau tambah data
-  if (store.activeRinciIndex !== null) {
-    // Mode edit: update data existing
-    store.form.rincians[store.activeRinciIndex] = { ...localRinci.value };
-  } else {
-    // Mode tambah: push data baru
-    store.form.rincians.push({ ...localRinci.value });
-  }
+  // Hitung subtotal
+  localRinci.value.subtotal =
+    localRinci.value.kuantitas * localRinci.value.harga;
 
-  // Simpan ke backend
-  store
-    .save()
-    .then(() => {
-      console.log("Data berhasil disimpan!");
-      closeDialog();
-    })
-    .catch((error) => {
-      console.error("Gagal menyimpan:", error);
-    });
+  try {
+    store.loading = true;
+    if (store.form.no_nota) {
+      localRinci.value.no_nota = store.form.no_nota;
+    }
+
+    // Tambahkan/update rincian di store
+    if (store.activeRinciIndex !== null) {
+      // Update existing rincian
+      store.form.rincians[store.activeRinciIndex] = { ...localRinci.value };
+      store.listrincian[store.activeRinciIndex] = { ...localRinci.value };
+    } else {
+      // Add new rincian
+      store.form.rincians.push({ ...localRinci.value });
+      store.listrincian.push({ ...localRinci.value });
+    }
+
+    // Simpan ke backend
+    await store.save(store.activeRinciIndex !== null);
+    closeDialog();
+    notifSuccess("Rincian berhasil disimpan");
+  } catch (error) {
+    console.error("Gagal menyimpan:", error);
+  } finally {
+    store.loading = false;
+  }
 }
 </script>

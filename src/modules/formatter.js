@@ -68,17 +68,22 @@ const formatRp = (value) => {
   }
 };
 
-const formatRpDouble = (value, dg) => {
-  if (value !== null) {
-    return (
-      "Rp. " +
-      Number(value)
-        .toFixed(dg)
-        .replace(".", ",")
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")
-    );
-    // .replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, '$1.')
-  }
+const formatRpDouble = (value, dg = 0) => {
+  if (value === null || value === undefined) return ""; // Handle nilai null atau undefined
+
+  const numericValue = Number(value); // Konversi ke angka
+  const isNegative = numericValue < 0; // Cek apakah nilai minus
+
+  // Format nilai absolut (tanpa tanda minus)
+  const formattedValue =
+    "Rp. " +
+    Math.abs(numericValue)
+      .toFixed(dg)
+      .replace(".", ",")
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+  // Jika nilai minus, bungkus dalam tanda kurung
+  return isNegative ? `(${formattedValue})` : formattedValue;
 };
 const formatDouble = (value, dg) => {
   if (value !== null && value !== 0) {
@@ -167,6 +172,11 @@ const olahUang = (val) => {
   }
 };
 
+const unformatRp = (value) => {
+  if (!value) return 0;
+  return parseFloat(value.replace(/[^0-9]/g, ""));
+};
+
 export {
   dateFull,
   dateHalfFormat,
@@ -192,4 +202,5 @@ export {
   formattanpaRp,
   formatDoubleKoma,
   formatPhone,
+  unformatRp,
 };

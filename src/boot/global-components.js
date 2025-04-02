@@ -34,4 +34,8 @@ export default ({ app }) => {
     "AppSelectServer",
     defineAsyncComponent(() => import("components/~global/AppSelectServer.vue"))
   );
+  app.component(
+    "BtnSave",
+    defineAsyncComponent(() => import("components/~global/BtnSave.vue"))
+  );
 };

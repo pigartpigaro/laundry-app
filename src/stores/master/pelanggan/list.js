@@ -80,7 +80,7 @@ export const useMasterPelangganStore = defineStore("master-pelanggan-store", {
           notifSuccess("Data berhasil dihapus");
         }
       } catch (error) {
-        console.log("del Brand error", error);
+        console.log("del Pelanggan error", error);
         notifError("Terjadi Kesalahan");
       }
     },

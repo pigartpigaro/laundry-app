@@ -1,7 +1,7 @@
 <template>
   <div class="col justify-center content-center items-center full-width">
     <div class="justify-center text-center q-py-sm">
-      <q-img src="~assets/logonami.svg" style="width: 250px" />
+      <q-img src="~assets/logonami.svg" style="width: 250px" :key="imgKey" />
     </div>
 
     <div class="justify-center text-center text-weight-bold">
@@ -18,6 +18,9 @@
     </div>
     <div class="justify-center text-center q-pt-md text-weight-bold">
       No Nota : {{ store.dataCetak?.no_nota }}
+    </div>
+    <div class="justify-center text-center" style="font-size: 13px">
+      Tanggal : {{ store.dataCetak?.tanggal }} {{ store.dataCetak?.time }}
     </div>
   </div>
   <div class="row content-center q-pt-sm">
@@ -87,7 +90,12 @@ import { formatRpDouble } from "src/modules/utils";
 import { useFormOrderTransaksiStore } from "src/stores/order/form";
 
 const store = useFormOrderTransaksiStore();
-
+const props = defineProps({
+  imgKey: {
+    type: Number,
+    required: true,
+  },
+});
 function totalNota() {
   const rinci = store.dataCetak?.rincians?.map((x) => parseFloat(x.subtotal));
   const total = rinci.reduce((a, b) => a + b, 0);

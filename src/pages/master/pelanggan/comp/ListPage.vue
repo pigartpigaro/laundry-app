@@ -127,6 +127,7 @@ const edit = (item) => {
   emits("edit", item);
 };
 const del = (item) => {
+  console.log("item Pelanggan", item?.id);
   $q.dialog({
     title: "Peringatan",
     message: "Apakah Data ini akan dihapus?",

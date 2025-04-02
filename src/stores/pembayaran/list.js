@@ -74,7 +74,7 @@ export const useOrderTransaksiStore = defineStore("order-transaksi-store", {
       this.items = this.items.filter((item) => item.id !== id);
       const params = { id };
       try {
-        const resp = await api.post(`/xy/order/transaksi/deleteorder`, params);
+        const resp = await api.post(`/xy/master/satuan/deletedata`, params);
         if (resp.status === 200) {
           const newArr = this.items?.filter((item) => item?.id !== id);
           this.items = newArr;

@@ -78,7 +78,7 @@ import { useQuasar } from "quasar";
 import { useMasterKategoriSelectStore } from "src/stores/master/kategori/select";
 import { useFormMasterProdukStore } from "src/stores/master/produklayanan/form";
 import { useMasterSatuanSelectStore } from "src/stores/master/satuan/select";
-import { computed, onMounted } from "vue";
+import { computed, onBeforeMount, onMounted } from "vue";
 
 const emits = defineEmits(["back"]);
 const $q = useQuasar();
@@ -97,6 +97,10 @@ const props = defineProps({
 });
 onMounted(() => {
   store.initReset(props.data);
+});
+onBeforeMount(() => {
+  selectSatuan.getDataAll();
+  selectKategori.getDataAll();
 });
 
 function isisatuan(val) {

@@ -63,16 +63,12 @@
                     }}</q-avatar>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="text-bold" lines="1">{{
-                      item?.pelanggan
-                    }}</q-item-label>
-                    <q-item-label lines="2">{{ item?.no_nota }}</q-item-label>
+                    <q-item-label lines="1">{{ item?.pelanggan }}</q-item-label>
                   </q-item-section>
                   <q-item-section v-if="hoveredId === item?.id" side>
                     <div class="flex q-gutter-sm">
                       <btn-edit @click="edit(item)" />
                       <btn-delete @click="del(item)" />
-                      <btn-print @click="viewCetak(item)" />
                     </div>
                   </q-item-section>
                   <q-item-section v-else side top>
@@ -98,18 +94,14 @@
       </div>
     </div>
   </div>
-  <dialog-cetak v-model="store.dialogCetak" />
 </template>
 <script setup>
 import { useQuasar } from "quasar";
 import { humanDate, jamTnpDetik } from "src/modules/utils";
-import { useFormOrderTransaksiStore } from "src/stores/order/form";
 import { useOrderTransaksiStore } from "src/stores/order/list";
 import { computed, defineAsyncComponent, onBeforeMount, ref } from "vue";
-const DialogCetak = defineAsyncComponent(() => import("./DialogPrintList.vue"));
 
 const store = useOrderTransaksiStore();
-const dariform = useFormOrderTransaksiStore();
 const scrollTarget = ref(null);
 const infiniteScroll = ref(null);
 const hoveredId = ref(null);
@@ -123,8 +115,6 @@ onBeforeMount(() => {
   // ])
 });
 const edit = (item) => {
-  console.log("EDIT", item);
-  dariform.initReset(item);
   emits("edit", item);
 };
 const del = (item) => {
@@ -146,11 +136,6 @@ const del = (item) => {
     });
 };
 
-function viewCetak(item) {
-  console.log("item", item);
-  store.dialogCetak = true;
-  store.dataCetak = item;
-}
 // eslint-disable-next-line no-unused-vars
 const next = computed(() => {
   let page = false;

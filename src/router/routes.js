@@ -29,8 +29,12 @@ const routes = [
 
       // Route Transaksi
       {
-        path: "/order/antrian",
+        path: "/transaksi/antrian",
         component: () => import("pages/transaksi/order/IndexPage.vue"),
+      },
+      {
+        path: "/transaksi/pembayaran",
+        component: () => import("pages/transaksi/pembayaran/IndexPage.vue"),
       },
     ],
   },

@@ -92,12 +92,12 @@
 import { useQuasar } from "quasar";
 import { formatRpDouble } from "src/modules/formatter";
 import { useFormOrderTransaksiStore } from "src/stores/order/form";
-// import { useOrderTransaksiStore } from "src/stores/order/list";
+import { useOrderTransaksiStore } from "src/stores/order/list";
 import { computed, defineAsyncComponent, onBeforeMount, ref } from "vue";
 const DialogCetak = defineAsyncComponent(() => import("./DialogCetak.vue"));
 
 const store = useFormOrderTransaksiStore();
-// const list = useOrderTransaksiStore();
+const list = useOrderTransaksiStore();
 const $q = useQuasar();
 const props = defineProps({
   data: {
@@ -106,7 +106,7 @@ const props = defineProps({
   },
 });
 onBeforeMount(() => {
-  // Promise.all([store.getrinci()]);
+  // Promise.all([list.getList()]);
 });
 const del = (item) => {
   console.log("hapus id", item);
@@ -130,15 +130,14 @@ const del = (item) => {
 };
 
 const listrincian = computed(() => {
-  console.log("formrinci", store.form);
-  return store.form.rincians || [];
+  return store.listrincian.length > 0 ? store.listrincian : store.form.rincians;
 });
 
 const totalrinci = computed(() => {
   // console.log("formrinci", store.form);
-  const rinci = store?.form?.rincians.map((s) => parseFloat(s.subtotal));
-  const total = rinci.reduce((a, b) => a + b, 0);
-  return total;
+  return listrincian.value.reduce((total, item) => {
+    return total + (parseFloat(item.subtotal) || 0);
+  }, 0);
 });
 
 const listDataitem = ref(null);
@@ -148,21 +147,4 @@ function viewCetak() {
   store.dataCetak = store.form;
   console.log("store.form", store.form);
 }
-// const printed = ref(false);
-// const printObj = {
-//   id: "printMe",
-//   popTitle:
-//     "Surat Permintaan Pengesahan Pendapatan, Belanja, dan Pembiayaan | SIASIK on XENTER",
-//   beforeOpenCallback(vue) {
-//     printed.value = true;
-//     console.log("wait...");
-//   },
-//   openCallback(vue) {
-//     console.log("opened");
-//   },
-//   closeCallback(vue) {
-//     printed.value = false;
-//     console.log("closePrint");
-//   },
-// };
 </script>
