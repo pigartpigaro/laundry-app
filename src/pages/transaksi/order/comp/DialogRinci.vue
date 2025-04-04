@@ -195,7 +195,7 @@ async function onSubmit() {
     closeDialog();
     notifSuccess("Rincian berhasil disimpan");
   } catch (error) {
-    console.error("Gagal menyimpan:", error);
+    console.log("Gagal menyimpan:", error);
   } finally {
     store.loading = false;
   }
