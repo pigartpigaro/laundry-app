@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 import { api } from "src/boot/axios";
 import { notifError, notifSuccess } from "src/modules/notifs";
 
-export const useOrderTransaksiStore = defineStore("order-transaksi-store", {
+export const useListPembayaranStore = defineStore("list-pembayaran-store", {
   state: () => ({
     meta: null,
     items: [],
@@ -32,7 +32,7 @@ export const useOrderTransaksiStore = defineStore("order-transaksi-store", {
         params: this.params,
       };
       try {
-        const { data } = await api.get("/xy/order/transaksi/listorder", params);
+        const { data } = await api.get("/xy/pembayaran/lunas/listdata", params);
         this.meta = data;
         this.items = data?.data;
         this.loading = false;
@@ -55,7 +55,7 @@ export const useOrderTransaksiStore = defineStore("order-transaksi-store", {
 
       return new Promise((resolve) => {
         api
-          .get("/xy/order/transaksi/listorder", params)
+          .get("/xy/pembayaran/lunas/listdata", params)
           .then(({ data }) => {
             this.meta = data;
             this.items.push(...data.data);
@@ -91,6 +91,6 @@ export const useOrderTransaksiStore = defineStore("order-transaksi-store", {
 
 if (import.meta.hot) {
   import.meta.hot.accept(
-    acceptHMRUpdate(useOrderTransaksiStore, import.meta.hot)
+    acceptHMRUpdate(useListPembayaranStore, import.meta.hot)
   );
 }
